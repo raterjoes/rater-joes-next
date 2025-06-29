@@ -55,7 +55,7 @@ export default async function RecipePage({ params }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       window.location.href = `https://rater-joes.vercel.app/recipes/${params.id}`;
-    }, 1500);
+    }, 4000);
     return () => clearTimeout(timer);
   }, [params.id]);
 

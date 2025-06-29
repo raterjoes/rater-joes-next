@@ -56,7 +56,7 @@ export default async function ProductPage({ params }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       window.location.href = `https://rater-joes.vercel.app/products/${params.id}`;
-    }, 1500);
+    }, 4000);
     return () => clearTimeout(timer);
   }, [params.id]);
 
