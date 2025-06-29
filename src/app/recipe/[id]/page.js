@@ -18,6 +18,7 @@ export async function generateMetadata({ params }) {
 
     const recipe = docSnap.data();
     const imageUrl = recipe.images?.[0] || '';
+    const url = `https://rater-joes-next.vercel.app/recipe/${params.id}`;
 
     return {
       title: recipe.title,
@@ -27,6 +28,7 @@ export async function generateMetadata({ params }) {
         description: recipe.description || `Check out this recipe: ${recipe.title}`,
         images: imageUrl ? [{ url: imageUrl }] : [],
         type: 'website',
+        url,
       },
       twitter: {
         card: 'summary_large_image',

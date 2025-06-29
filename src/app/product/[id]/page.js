@@ -18,6 +18,7 @@ export async function generateMetadata({ params }) {
 
     const product = { id: docSnap.id, ...docSnap.data() };
     const imageUrl = product.images?.[0] || product.image || '';
+    const url = `https://rater-joes-next.vercel.app/product/${params.id}`;
 
     return {
       title: product.name,
@@ -27,6 +28,7 @@ export async function generateMetadata({ params }) {
         description: product.description || `Check out ${product.name} at Rater Joe's`,
         images: imageUrl ? [{ url: imageUrl }] : [],
         type: 'website',
+        url,
       },
       twitter: {
         card: 'summary_large_image',
