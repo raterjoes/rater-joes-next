@@ -2,6 +2,7 @@ import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { notFound } from 'next/navigation';
 import { Helmet } from 'react-helmet-async';
+import { useEffect } from "react";
 
 // This function runs on the server
 export async function generateMetadata({ params }) {
@@ -52,6 +53,13 @@ export async function generateStaticParams() {
 }
 
 export default async function ProductPage({ params }) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.location.href = `https://rater-joes.vercel.app/products/${params.id}`;
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [params.id]);
+
   try {
     const docRef = doc(db, "products", params.id);
     const docSnap = await getDoc(docRef);
