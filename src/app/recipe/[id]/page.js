@@ -1,8 +1,7 @@
-"use client";
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { notFound } from 'next/navigation';
-import { useEffect } from "react";
+import RedirectToMain from './RedirectToMain';
 
 // This function runs on the server
 export async function generateMetadata({ params }) {
@@ -53,13 +52,6 @@ export async function generateStaticParams() {
 }
 
 export default async function RecipePage({ params }) {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      window.location.href = `https://rater-joes.vercel.app/recipes/${params.id}`;
-    }, 4000);
-    return () => clearTimeout(timer);
-  }, [params.id]);
-
   try {
     const docRef = doc(db, "recipes", params.id);
     const docSnap = await getDoc(docRef);
@@ -71,82 +63,85 @@ export default async function RecipePage({ params }) {
     const recipe = docSnap.data();
 
     return (
-      <div className="min-h-screen bg-orange-50">
-        <div className="max-w-4xl mx-auto px-6 py-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
-            {recipe.title}
-          </h1>
+      <>
+        <RedirectToMain id={params.id} />
+        <div className="min-h-screen bg-orange-50">
+          <div className="max-w-4xl mx-auto px-6 py-8">
+            <h1 className="text-3xl font-bold text-gray-800 mb-4">
+              {recipe.title}
+            </h1>
 
-          {recipe.images && recipe.images.length > 0 && (
-            <div className="mb-6">
-              <img 
-                src={recipe.images[0]} 
-                alt={recipe.title}
-                className="w-full max-w-2xl h-64 object-cover rounded-lg shadow"
-              />
-            </div>
-          )}
+            {recipe.images && recipe.images.length > 0 && (
+              <div className="mb-6">
+                <img 
+                  src={recipe.images[0]} 
+                  alt={recipe.title}
+                  className="w-full max-w-2xl h-64 object-cover rounded-lg shadow"
+                />
+              </div>
+            )}
 
-          {recipe.description && (
-            <div className="mb-6">
-              <p className="text-gray-700 text-lg">
-                {recipe.description}
+            {recipe.description && (
+              <div className="mb-6">
+                <p className="text-gray-700 text-lg">
+                  {recipe.description}
+                </p>
+              </div>
+            )}
+
+            {recipe.ingredients && recipe.ingredients.length > 0 && (
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold mb-3">Ingredients</h2>
+                <ul className="list-disc list-inside space-y-1">
+                  {recipe.ingredients.map((ingredient, index) => (
+                    <li key={index} className="text-gray-700">
+                      {ingredient}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {recipe.instructions && recipe.instructions.length > 0 && (
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold mb-3">Instructions</h2>
+                <ol className="list-decimal list-inside space-y-2">
+                  {recipe.instructions.map((instruction, index) => (
+                    <li key={index} className="text-gray-700">
+                      {instruction}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
+            {recipe.cookTime && (
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold mb-3">Cook Time</h2>
+                <p className="text-gray-700">
+                  {recipe.cookTime} minutes
+                </p>
+              </div>
+            )}
+
+            {recipe.servings && (
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold mb-3">Servings</h2>
+                <p className="text-gray-700">
+                  {recipe.servings} servings
+                </p>
+              </div>
+            )}
+
+            <div className="mt-8">
+              <h2 className="text-2xl font-bold mb-4">Comments</h2>
+              <p className="text-gray-600">
+                Comments will be loaded client-side for real-time updates.
               </p>
             </div>
-          )}
-
-          {recipe.ingredients && recipe.ingredients.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold mb-3">Ingredients</h2>
-              <ul className="list-disc list-inside space-y-1">
-                {recipe.ingredients.map((ingredient, index) => (
-                  <li key={index} className="text-gray-700">
-                    {ingredient}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {recipe.instructions && recipe.instructions.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold mb-3">Instructions</h2>
-              <ol className="list-decimal list-inside space-y-2">
-                {recipe.instructions.map((instruction, index) => (
-                  <li key={index} className="text-gray-700">
-                    {instruction}
-                  </li>
-                ))}
-              </ol>
-            </div>
-          )}
-
-          {recipe.cookTime && (
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold mb-3">Cook Time</h2>
-              <p className="text-gray-700">
-                {recipe.cookTime} minutes
-              </p>
-            </div>
-          )}
-
-          {recipe.servings && (
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold mb-3">Servings</h2>
-              <p className="text-gray-700">
-                {recipe.servings} servings
-              </p>
-            </div>
-          )}
-
-          <div className="mt-8">
-            <h2 className="text-2xl font-bold mb-4">Comments</h2>
-            <p className="text-gray-600">
-              Comments will be loaded client-side for real-time updates.
-            </p>
           </div>
         </div>
-      </div>
+      </>
     );
   } catch (error) {
     console.error('Error fetching recipe:', error);
