@@ -1,4 +1,4 @@
-import { db } from '../../../lib/firebase';
+import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { notFound } from 'next/navigation';
 import { Helmet } from 'react-helmet-async';
